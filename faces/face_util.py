@@ -106,7 +106,12 @@ def collect_faces_image(details):
         print_error("File does not exists. Can not load face encoding. " + file)
         delete_temp_jpg(tmp_jpg)
         return result
-    image = face_recognition.load_image_file(file)
+    try:
+        image = face_recognition.load_image_file(file)
+    except:
+        if is_verbose: print("WARNING Skip this images. Why? Face_recognition failed to load file " + file)
+        delete_temp_jpg(tmp_jpg)
+        return result
     face_encodings = face_recognition.face_encodings(image)
     number_encodings = len(face_encodings)
     if is_verbose: print("Found '" + str(number_encodings) + "' faces in file " + img_orig)
