@@ -45,7 +45,7 @@ def collect_faces_of_dir(dir, verbose, collect, d_faces_unknown):
     l = len(images_to_read)
     print("Read '"+ str(l) + "' image(s) from files in directory " + dir)
     startTimeSeconds = time.time()
-    storeDBafterSeconds = 60
+    storeDBafterSeconds = 60*5
     imageCounter = 0
     singleCPU = False
     if singleCPU:
@@ -128,7 +128,7 @@ def collect_faces_image(details):
     face_locations = face_recognition.face_locations(image)
     number_locations = len(face_locations)
     if not number_locations == number_encodings:
-        if is_verbose: print("WARNING found '" + str(number_encodings) + "' face encodings but '" + str(number_locations) + "' locations of faces in file " + img_orig)
+        if is_verbose: print("WARNING: Found '" + str(number_encodings) + "' face encodings but '" + str(number_locations) + "' locations of faces in file " + img_orig)
         #result.append(faces)
         delete_temp_jpg(tmp_jpg)
         return result
