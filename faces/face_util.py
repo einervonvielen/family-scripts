@@ -1,5 +1,5 @@
 from PIL import Image
-import glob, os, sys, face_recognition, itertools, subprocess, concurrent.futures, numpy, pickle, datetime
+import glob, os, sys, face_recognition, itertools, subprocess, concurrent.futures, numpy, pickle, datetime, time
 
 is_verbose = ""
 
@@ -44,24 +44,30 @@ def collect_faces_of_dir(dir, verbose, collect, d_faces_unknown):
         images_to_read.append(details)
     l = len(images_to_read)
     print("Read '"+ str(l) + "' image(s) from files in directory " + dir)
-    rounds_max = 20
-    round = 1
-    singleCPU = True
+    startTimeSeconds = time.time()
+    storeDBafterSeconds = 60
+    imageCounter = 0
+    singleCPU = False
     if singleCPU:
-        if is_verbose: print("Use one CPU only for dir" + dir)
+        if is_verbose: print("Use one CPU only for dir " + dir)
         for details in images_to_read:
-            if is_verbose: print(str(round) + " of " + str(l) + " is the next image...")
+            imageCounter += 1
+            if is_verbose: print(str(imageCounter) + " of " + str(l) + " is the next image...")
             result = collect_faces_image(details)
+            lengthResult = len(result)
+            if lengthResult > 0:
+                faces_of_image = result[0]
+                faces_of_dir.append(faces_of_image)
             faces_of_image = result[0]
             faces_of_dir.append(faces_of_image)
-            if not rounds_max < 1:
-                round += 1;
-                takeit = round % rounds_max
-                if takeit == 0:
-                    if is_verbose: print("write DB after another " + str(rounds_max) + " rounds")
-                    write_db_faces_of_dir(faces_of_dir, dir)
+            currentSeconds = time.time()
+            elapsed = currentSeconds - startTimeSeconds
+            if elapsed > storeDBafterSeconds:            
+                if is_verbose: print("About to store DB again after " + str(elapsed) + " seconds")
+                #write_db_faces_of_dir(faces_of_dir, dir)
+                startTimeSeconds = currentSeconds
     else:
-        if is_verbose: print("Use all CPUs for dir" + dir)
+        if is_verbose: print("Use all CPUs for dir " + dir)
         with concurrent.futures.ProcessPoolExecutor() as executor:
             # Process the list of files, but split the work across the process pool to use all CPUs!
             for details, result in zip(images_to_read, executor.map(collect_faces_image, images_to_read)):
@@ -69,12 +75,12 @@ def collect_faces_of_dir(dir, verbose, collect, d_faces_unknown):
                 if l > 0:
                     faces_of_image = result[0]
                     faces_of_dir.append(faces_of_image)
-                if not rounds_max < 10:
-                    round += 1;
-                    takeit = round % rounds_max
-                    if takeit == 0:
-                        if is_verbose: print("write DB after another " + str(rounds_max) + " rounds")
-                        write_db_faces_of_dir(faces_of_dir, dir)
+                currentSeconds = time.time()
+                elapsed = currentSeconds - startTimeSeconds
+                if elapsed > storeDBafterSeconds:            
+                    if is_verbose: print("About to store DB again after " + str(elapsed) + " seconds")
+                    #write_db_faces_of_dir(faces_of_dir, dir)
+                    startTimeSeconds = currentSeconds
     write_db_faces_of_dir(faces_of_dir, dir)
     return faces_of_dir
 
