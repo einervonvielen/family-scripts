@@ -52,11 +52,12 @@ def collect_faces_of_dir(dir, verbose, collect, d_faces_unknown, rounds_max):
             if l > 0:
                 faces_of_image = result[0]
                 faces_of_dir.append(faces_of_image)
-            round += 1;
-            takeit = round % rounds_max
-            if takeit == 0:
-                if is_verbose: print("write DB after another " + str(rounds_max) + " rounds")
-                write_db_faces_of_dir(faces_of_dir, dir)
+            if not rounds_max < 10:
+                round += 1;
+                takeit = round % rounds_max
+                if takeit == 0:
+                    if is_verbose: print("write DB after another " + str(rounds_max) + " rounds")
+                    write_db_faces_of_dir(faces_of_dir, dir)
     write_db_faces_of_dir(faces_of_dir, dir)
     return faces_of_dir
 
