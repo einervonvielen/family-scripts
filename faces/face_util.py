@@ -45,11 +45,12 @@ def collect_faces_of_dir(dir, verbose, collect, d_faces_unknown):
     l = len(images_to_read)
     print("Read '"+ str(l) + "' image(s) from files in directory " + dir)
     rounds_max = 20
-    round = 0
+    round = 1
     singleCPU = True
     if singleCPU:
         if is_verbose: print("Use one CPU only for dir" + dir)
         for details in images_to_read:
+            if is_verbose: print(str(round) + " of " + str(l) + " is the next image...")
             result = collect_faces_image(details)
             faces_of_image = result[0]
             faces_of_dir.append(faces_of_image)
