@@ -69,7 +69,7 @@ Tested XMP files
 
 Don't give up here in case you are not used to the command line. It is no rocket science.
 
-    git clone https://github.com/einervonvielen/import-faces.git
+    git clone https://github.com/einervonvielen/family-scripts.git
     su -
     cd directory-where-you-cloned-the-file-to
     bash install.sh
