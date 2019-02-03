@@ -64,7 +64,7 @@ def collect_faces_of_dir(dir, verbose, collect, d_faces_unknown):
             elapsed = currentSeconds - startTimeSeconds
             if elapsed > storeDBafterSeconds:            
                 if is_verbose: print("About to store DB again after " + str(elapsed) + " seconds")
-                #write_db_faces_of_dir(faces_of_dir, dir)
+                write_db_faces_of_dir(faces_of_dir, dir)
                 startTimeSeconds = currentSeconds
     else:
         if is_verbose: print("Use all CPUs for dir " + dir)
@@ -79,7 +79,7 @@ def collect_faces_of_dir(dir, verbose, collect, d_faces_unknown):
                 elapsed = currentSeconds - startTimeSeconds
                 if elapsed > storeDBafterSeconds:            
                     if is_verbose: print("About to store DB again after " + str(elapsed) + " seconds")
-                    #write_db_faces_of_dir(faces_of_dir, dir)
+                    write_db_faces_of_dir(faces_of_dir, dir)
                     startTimeSeconds = currentSeconds
     write_db_faces_of_dir(faces_of_dir, dir)
     return faces_of_dir
