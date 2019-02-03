@@ -4,7 +4,7 @@ import glob, os, sys, face_recognition, itertools, subprocess, concurrent.future
 is_verbose = ""
 
 
-def collect_faces_of_dir(dir, verbose, collect, d_faces_unknown, rounds_max):
+def collect_faces_of_dir(dir, verbose, collect, d_faces_unknown):
     global is_verbose
     is_verbose = verbose
     global is_collect
@@ -44,20 +44,36 @@ def collect_faces_of_dir(dir, verbose, collect, d_faces_unknown, rounds_max):
         images_to_read.append(details)
     l = len(images_to_read)
     print("Read '"+ str(l) + "' image(s) from files in directory " + dir)
+    rounds_max = 20
     round = 0
-    with concurrent.futures.ProcessPoolExecutor() as executor:
-        # Process the list of files, but split the work across the process pool to use all CPUs!
-        for details, result in zip(images_to_read, executor.map(collect_faces_image, images_to_read)):
-            l = len(result)
-            if l > 0:
-                faces_of_image = result[0]
-                faces_of_dir.append(faces_of_image)
-            if not rounds_max < 10:
+    singleCPU = True
+    if singleCPU:
+        if is_verbose: print("Use one CPU only for dir" + dir)
+        for details in images_to_read:
+            result = collect_faces_image(details)
+            faces_of_image = result[0]
+            faces_of_dir.append(faces_of_image)
+            if not rounds_max < 1:
                 round += 1;
                 takeit = round % rounds_max
                 if takeit == 0:
                     if is_verbose: print("write DB after another " + str(rounds_max) + " rounds")
                     write_db_faces_of_dir(faces_of_dir, dir)
+    else:
+        if is_verbose: print("Use all CPUs for dir" + dir)
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            # Process the list of files, but split the work across the process pool to use all CPUs!
+            for details, result in zip(images_to_read, executor.map(collect_faces_image, images_to_read)):
+                l = len(result)
+                if l > 0:
+                    faces_of_image = result[0]
+                    faces_of_dir.append(faces_of_image)
+                if not rounds_max < 10:
+                    round += 1;
+                    takeit = round % rounds_max
+                    if takeit == 0:
+                        if is_verbose: print("write DB after another " + str(rounds_max) + " rounds")
+                        write_db_faces_of_dir(faces_of_dir, dir)
     write_db_faces_of_dir(faces_of_dir, dir)
     return faces_of_dir
 

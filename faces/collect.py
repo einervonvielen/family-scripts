@@ -28,12 +28,6 @@ def print_help():
     print("    verbose. Prints more messages.")
     print("  -h or --help")
     print("    Print this help message.")
-    print("  -b INTEGER (optional)")
-    print("    Write the DB after n images are proccessed.")
-    print("    When to use? To avoid errors when converting RAW to temporary JPG.")
-    print("    This happens in rare cases.")
-    print("    default is 0 (no effect)")
-    print("    If -b is lower then 1 this parameter has no effect.")
     quit()
 
 
@@ -53,16 +47,11 @@ for arg in sys.argv[1:]:
         next_arg = "-i"
     elif arg == '-f':
         next_arg = "-f"
-    elif arg == '-b':
-        next_arg = "-b"
     elif next_arg == '-i':
         dir_images_arg = arg
         next_arg = ""
     elif next_arg == '-f':
         dir_faces_arg = arg
-        next_arg = ""
-    elif next_arg == '-b':
-        rounds_max_arg = arg
         next_arg = ""
     elif arg == '-r':
         is_recursive = "-r"
@@ -113,13 +102,6 @@ dir_exclude = os.path.join(dir_faces_known, "exclude")
 if not os.path.exists(dir_exclude):
     os.mkdir(dir_exclude)
 
-if is_verbose: print("max rounds for DB to store = " + str(rounds_max_arg))
-try:
-    rounds_max = int(rounds_max_arg)
-except ValueError:    
-    rounds_max = 0
-    if is_verbose: print("max rounds to store DB (parameter -b) was not an integer. Take default = " + str(rounds_max))
-
 
 # Start to find the images
 img_dirs = []
@@ -129,6 +111,6 @@ if is_recursive:
         for dir in dirs:
             img_dirs.append(os.path.join(subdir, dir))
 for dir in img_dirs:
-    face_util.collect_faces_of_dir(dir, is_verbose, True, dir_faces_unknown, rounds_max)
+    face_util.collect_faces_of_dir(dir, is_verbose, True, dir_faces_unknown)
 
 quit()
