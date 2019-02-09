@@ -50,6 +50,7 @@ def compare_face(file):
     if not nearest_face == "":
         movedfile = os.path.join(dir_faces_known, nearest_face, file)
         os.rename(unknown_img, movedfile)
+        os.utime(movedfile)
         print(nearest_face + " < " + file)
     return file;
 
