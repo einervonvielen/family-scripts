@@ -15,8 +15,6 @@ Input
 - TIFFs
 - Series of TIFFs in the form of "scan-01.tiff", "scan-03.tiff",... (SimpleScan stores TIFFs like this.)
 
-## diary
+## fotodiary
 
-todo
-
-Reads titles and descriptions from images and generates HTML.
+Reads titles and descriptions from images and generates a web page.
