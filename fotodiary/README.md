@@ -2,26 +2,27 @@
 
 Install
 
-- Python
-- exiftool
+    apt-get install exiftool
 
 Run (example)
 
-    python3 diary.py -v -i images/
+    bash diary.sh images/
 
 What it does...
 
-The command above searches for fotos in dir "images/" and
+The command above searches for fotos in dir "images/" and writes for each image into "content.txt"
 
-- reads the filename
-- reads the EXIF Title (exiftool)
-- reads the EXIF Description (exiftool)
+- IMAGE:filename
+- TITLE:from image with exiftool
+- DESCRIPTION:from image with exiftool
+- CREATE DATE:from image with exiftool
+- GPS POSITION:from image with exiftool
 
 Result
 
-A file "diary.html"
+A file "content.txt". This file is loaded by diary.html. Everything else is done with JavaScript inside the web page.
 
 TODO
 
-more content features will follow
+- create the web page
 
