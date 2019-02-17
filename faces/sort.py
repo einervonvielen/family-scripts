@@ -48,7 +48,10 @@ def compare_face(file):
         return file
     nearest_face, nearest_encoding = face_util.compare_face(img_encodings[0], known_faces, known_encodings, face_tolerance, is_verbose)
     if not nearest_face == "":
-        movedfile = os.path.join(dir_faces_known, nearest_face, file)
+        suggested_dir = os.path.join(dir_faces_suggested, nearest_face)
+        if not os.path.exists(suggested_dir):
+            os.makedirs(suggested_dir, exist_ok=True)
+        movedfile = os.path.join(dir_faces_suggested, nearest_face, file)
         os.rename(unknown_img, movedfile)
         os.utime(movedfile)
         print(nearest_face + " < " + file)
@@ -58,6 +61,7 @@ def compare_face(file):
 is_verbose = ""
 dir_faces = "faces"
 dir_faces_unknown = ""
+dir_faces_suggested = ""
 face_tolerance = 0.5
 next_arg = ""
 for arg in sys.argv[1:]:
@@ -102,6 +106,17 @@ if not os.path.exists(dir_faces_known):
     print("... and move their faces into it.")
     print("There is nothing to do. Creating dir "+ dir_faces_known + "...")
     print_help()
+dir_faces_suggested = os.path.join(dir_faces, "suggested")
+if not os.path.exists(dir_faces_suggested):
+    os.mkdir(dir_faces_suggested)
+    print("Directory for suggested faces does not exist. Creating dir =  " + dir_faces_suggested)
+
+# Remove empty subdirs in suggested
+for subdir in os.listdir(dir_faces_suggested):
+	if os.path.isdir(os.path.join(dir_faces_suggested, subdir)):
+		if not os.listdir(os.path.join(dir_faces_suggested, subdir)):
+			if is_verbose: print("Remove empty dir for suggested face dir " + subdir)
+			os.rmdir(os.path.join(dir_faces_suggested, subdir))
 
 # Read known faces recursivly
 known_faces = []
