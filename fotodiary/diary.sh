@@ -31,12 +31,12 @@ else
 fi
 echo "image directory is: $imgdir"
 
-outfile="content.txt"
+outfile="diary.html"
 echo "" > $outfile
 shopt -s nullglob
 for file in "$imgdir"/*.{jpg,JPG,jpeg,JPEG,png,PNG,dng,DNG,cr2,CR2} ; do
-	content+="\nIMAGE:$file\n"
-	echo "$file"
+	content+="<p>\n"
+	echo "# $file"
 	lines=$(exiftool "$file")
 	# echo "lines: $lines"
 	title=""
@@ -65,21 +65,38 @@ for file in "$imgdir"/*.{jpg,JPG,jpeg,JPEG,png,PNG,dng,DNG,cr2,CR2} ; do
 	done <<< "$lines"
 	if [ "$title" != "" ]; then
 		echo "TITLE:$title"
-		content+="TITLE:$title"
+		content+="<div class='title'>$title</div>\n"
 	fi
-	if [ "$description" != "" ]; then
-		echo "DESCRIPTION:$description"
-		content+="DESCRIPTION:$description\n"
-	fi
+	content+="<img src='$file'>\n"
 	if [ "$creation_date" != "" ]; then
 		echo "CREATION DATE:$creation_date"
-		content+="CREATION DATE:$creation_date\n"
+		content+="<div class='date'>$creation_date</div>\n"
 	fi
 	if [ "$gps_position" != "" ]; then
 		echo "GPS POSITION:$gps_position\n"
-		content+="GPS POSITION:$gps_position\n"
+		content+="<div class='position'>$gps_position</div>\n"
 	fi
+	if [ "$description" != "" ]; then
+		echo "DESCRIPTION:$description"
+		content+="<div class='description'>$description</div>\n"
+	fi
+	content+="</p>\n"
 done
 
-echo -e $content >> $outfile
+read -r -d '' html <<- EOM
+<html>
+<head>
+<meta charset="utf-8"/>
+<style>
+img {width:100%}
+.title {font-size:2.5em}
+</style>
+</head>
+<body>
+diary
+</body>
+</html>
+EOM
+
+echo -e "${html/diary/$content}" >> $outfile
 
