@@ -4,7 +4,7 @@
 
 Tag you photos with your family members and friends.
 
-This script collection searches your photos for faces and writes the names of your friends as tags into the side card files (xmp) of your photos. As an intermediate step you sort the faces manually into directories ("known/Bob", "known/Jane",...)
+This script collection searches your photos for faces and writes the names of your friends as tags into the side card files (xmp) of your photos or into the photos directly. As an intermediate step you sort the faces manually into directories ("known/Bob", "known/Jane",...)
 
 Basically it mimics Googles Picasa except you have to use
 
