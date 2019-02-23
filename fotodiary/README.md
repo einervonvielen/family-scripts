@@ -8,7 +8,11 @@ Run (example)
 
     bash diary.sh images/
 
-What it does...
+Result
+
+    diary.html
+
+What the script does...
 
 The command above searches for fotos in dir "images/" and writes for each image into "content.txt"
 
@@ -30,8 +34,4 @@ Images can be of type
 - CR2
 
 Exiftool can read much more file types. Adapt the script if you want more.
-
-TODO
-
-- create the web page
 
