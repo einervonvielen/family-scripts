@@ -25,7 +25,7 @@ def collect_faces_of_dir(dir, verbose, collect, d_faces_unknown):
             # yes, image exists
             faces_of_dir.append(faces_of_image)
     l = len(faces_of_dir)
-    print("Read '"+ str(l) + "' image(s) from DB in directory " + dir)
+    if is_verbose: print("Read '"+ str(l) + "' image(s) from DB in directory " + dir)
     for filename in files:
         if filename in files_name_stored:
             continue
@@ -45,7 +45,7 @@ def collect_faces_of_dir(dir, verbose, collect, d_faces_unknown):
         details.append(filename)
         images_to_read.append(details)
     l = len(images_to_read)
-    print("Read '"+ str(l) + "' image(s) from files in directory " + dir)
+    if is_verbose: print("Read '"+ str(l) + "' image(s) from files in directory " + dir)
     startTimeSeconds = time.time()
     storeDBafterSeconds = 60*5
     imageCounter = 0
@@ -181,7 +181,10 @@ def copy_faces_to_unkown(filename, image, face_locations, dir_faces_unknown):
         #pil_image.show()
         img_name = "face-" + str(top_new) + "-" + str(left_new) + "-" + str(bottom_new) + "-" + str(right_new) + "_" + file + ".jpg"
         pil_image.save(dir_faces_unknown + "/" + img_name)
-        print("Wrote face to '" + dir_faces_unknown + "/" + img_name)
+        if is_verbose:
+            print("Wrote face to '" + dir_faces_unknown + "/" + img_name)
+        else:
+            print(dir_faces_unknown + "/" + img_name)
     return
 
 
