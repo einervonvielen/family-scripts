@@ -5,6 +5,8 @@ is_verbose = ""
 
 
 def collect_faces_of_dir(dir, verbose, collect, d_faces_unknown):
+    # check images size to avoid DecompressionBombWarning and running out of memory 
+    Image.warnings.simplefilter('error', Image.DecompressionBombWarning)
     global is_verbose
     is_verbose = verbose
     global is_collect
@@ -116,6 +118,7 @@ def collect_faces_image(details):
         image = face_recognition.load_image_file(file)
     except:
         if is_verbose: print("WARNING Skip this images. Why? Face_recognition failed to load file " + file)
+        if is_verbose: print("A reason might be that an image exceeds the max image size from IMAGE = " + str(Image.MAX_IMAGE_PIXELS))
         delete_temp_jpg(tmp_jpg)
         return result
     face_encodings = face_recognition.face_encodings(image)
